@@ -346,15 +346,14 @@ module UbiquoI18n
                     target.concat(contents)
 
                     # now "localize" the contents
-                    translations_to_do = {}
+                    translations_to_do = ActiveSupport::OrderedHash.new
                     target.each do |element|
                       if element.class.is_translatable? && !element.in_locale?(locale) && (translation = element.in_locale(locale, *extra_locales_in_order))
                         translations_to_do[element] = translation
                       end
                     end
                     translations_to_do.each_pair do |foreign, translation|
-                      target.delete foreign
-                      target << translation
+                      target[target.index(foreign)] = translation
                     end
                   end
 
